@@ -7,5 +7,12 @@
         "questionCount": 5,
         "category": "basics"
       }
+      {
+        "id": "1.1.1",
+        "title": "Общие знания тестирования - Уровень 1",
+        "description": "",
+        "questionCount": 15,
+        "category": "basics"
+      }
     ]
   }
