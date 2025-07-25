@@ -3,13 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QA Тесты</title>
+    <title>QA Academy - Платформа тестирования</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">QA Academy</h1>
+            <p class="hero-subtitle">Интерактивная платформа для изучения тестирования</p>
+        </div>
+        <div class="hero-waves">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" 
+                      class="wave-fill"></path>
+            </svg>
+        </div>
+    </div>
+
     <div class="container">
-        <h1>Тесты по QA</h1>
-        <div id="testList" class="test-list"></div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-value">50</div>
+                <div class="stat-label">Тестов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">❓</div>
+                <div class="stat-value">500+</div>
+                <div class="stat-label">Вопросов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Бесплатно</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Доступные тесты</h2>
+        <div id="testList" class="test-grid"></div>
     </div>
     
     <script>
@@ -18,13 +49,32 @@
             .then(r => r.json())
             .then(data => {
                 const listEl = document.getElementById('testList');
-                data.tests.forEach(test => {
+                data.tests.forEach((test, index) => {
+                    const delay = index * 100;
                     listEl.innerHTML += `
-                        <div class="test-card">
-                            <h3>${test.title}</h3>
-                            <p>${test.description}</p>
-                            <p>Вопросов: ${test.questionCount}</p>
-                            <a href="test.html?id=${test.id}" class="btn">Начать тест</a>
+                        <div class="test-card" style="animation-delay: ${delay}ms">
+                            <div class="test-card-header">
+                                <div class="test-icon">🎓</div>
+                                <div class="test-badge">Базовый уровень</div>
+                            </div>
+                            <h3 class="test-title">${test.title}</h3>
+                            <p class="test-description">${test.description}</p>
+                            <div class="test-meta">
+                                <div class="meta-item">
+                                    <span class="meta-icon">📝</span>
+                                    <span>${test.questionCount} вопросов</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">⏱️</span>
+                                    <span>~15 минут</span>
+                                </div>
+                            </div>
+                            <a href="test.html?id=${test.id}" class="btn btn-primary">
+                                <span>Начать тест</span>
+                                <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M7 10h6m0 0l-3-3m3 3l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </a>
                         </div>
                     `;
                 });

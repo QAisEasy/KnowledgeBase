@@ -3,21 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест</title>
+    <title>Тест - QA Academy</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="progress">
-            <div class="progress-bar" id="progressBar"></div>
+    <header class="test-header">
+        <div class="header-content">
+            <a href="index.html" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M13 10H7m0 0l3-3m-3 3l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Назад к тестам</span>
+            </a>
+            <div class="test-timer" id="timer">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="2"/>
+                    <path d="M8 4v4l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span id="timerText">00:00</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="test-container">
+        <div class="progress-section">
+            <div class="progress-info">
+                <span id="progressText">Вопрос 1 из 5</span>
+                <span id="scoreText">0 правильных</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
         </div>
         
         <div id="questionContainer" class="question-container"></div>
         
-        <div id="result" class="result" style="display: none;">
-            <h2>Тест завершен!</h2>
-            <p>Правильных ответов: <span id="score"></span></p>
-            <a href="index.html" class="btn">К списку тестов</a>
+        <div id="result" class="result-container" style="display: none;">
+            <div class="result-card">
+                <div class="result-icon">🎉</div>
+                <h2 class="result-title">Тест завершен!</h2>
+                <div class="result-score">
+                    <span class="score-label">Ваш результат</span>
+                    <div class="score-value" id="scoreValue">0</div>
+                    <span class="score-total" id="scoreTotal">из 0</span>
+                </div>
+                <div class="result-message" id="resultMessage"></div>
+                <div class="result-actions">
+                    <a href="index.html" class="btn btn-secondary">К списку тестов</a>
+                    <button class="btn btn-primary" onclick="location.reload()">
+                        <span>Пройти заново</span>
+                        <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 10a6 6 0 0112 0 6 6 0 01-12 0z" stroke="currentColor" stroke-width="2"/>
+                            <path d="M10 7v3l2 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
     
