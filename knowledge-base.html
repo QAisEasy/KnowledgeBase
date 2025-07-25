@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База знаний - QA Academy</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Дополнительные стили для базы знаний */
+        .knowledge-base {
+            padding: 40px 20px;
+        }
+
+        .kb-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .kb-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+
+        .kb-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .blocks-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .block {
+            margin-bottom: 60px;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .block:nth-child(2) { animation-delay: 0.1s; }
+        .block:nth-child(3) { animation-delay: 0.2s; }
+        .block:nth-child(4) { animation-delay: 0.3s; }
+        .block:nth-child(5) { animation-delay: 0.4s; }
+        .block:nth-child(6) { animation-delay: 0.5s; }
+
+        .block-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .block-icon {
+            font-size: 3rem;
+            background: rgba(255, 255, 255, 0.2);
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .block-info {
+            flex: 1;
+        }
+
+        .block-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .block-description {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .skills-grid {
+            background: white;
+            border-radius: 0 0 16px 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .skill {
+            border-bottom: 1px solid var(--light-gray);
+            padding: 30px 0;
+        }
+
+        .skill:last-child {
+            border-bottom: none;
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .skill-header:hover {
+            transform: translateX(10px);
+        }
+
+        .skill-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .skill-number {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .skill-arrow {
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-header:hover .skill-arrow {
+            transform: translateX(5px);
+        }
+
+        .levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .level {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
+        }
+
+        .level:hover {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .level:hover::before {
+            transform: scaleY(1);
+        }
+
+        .level-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .level-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .level-lessons {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .level.coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .level.coming-soon::after {
+            content: 'Скоро';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--warning);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Прогресс блока */
+        .block-progress {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            margin: 0 20px;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Навигация */
+        .back-to-tests {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-tests:hover {
+            transform: translateX(-5px);
+            color: var(--primary-dark);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .block-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .block-icon {
+                margin-bottom: 20px;
+            }
+
+            .levels {
+                grid-template-columns: 1fr;
+            }
+
+            .skill-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="knowledge-base">
+        <div class="container">
+            <a href="index.html" class="back-to-tests">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M13 10H7m0 0l3-3m-3 3l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Вернуться к тестам</span>
+            </a>
+
+            <div class="kb-header">
+                <h1 class="kb-title">База знаний QA Engineer</h1>
+                <p class="kb-subtitle">
+                    Структурированная программа обучения от основ до экспертного уровня. 
+                    6 блоков, 18 навыков, 90+ уровней мастерства.
+                </p>
+            </div>
+
+            <div class="blocks-container">
+                <!-- Блок 1: Фундамент тестирования -->
+                <div class="block">
+                    <div class="block-header">
+                        <div class="block-icon">🎯</div>
+                        <div class="block-info">
+                            <h2 class="block-title">БЛОК 1: Фундамент тестирования</h2>
+                            <p class="block-description">Базовые концепции, методологии и подходы к тестированию ПО</p>
+                        </div>
+                    </div>
+                    <div class="skills-grid">
+                        <!-- Навык 1.1 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">1.1</span>
+                                    <span>Общие знания тестирования</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level" onclick="location.href='test.html?id=1.1.0'">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Введение в тестирование</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Базовые концепции</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Системное понимание</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Стратегическое мышление</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Экспертиза</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 1.2 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">1.2</span>
+                                    <span>Тест-дизайн и техники тестирования</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Зачем нужен тест-дизайн</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Базовые техники</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Продвинутые техники</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Комплексный дизайн</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Мастерство</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 1.3 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">1.3</span>
+                                    <span>Тестирование требований и документации</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Предотвращение багов</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Работа с требованиями</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Техники анализа</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутый анализ</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Экспертиза требований</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="block-progress">
+                            <span class="progress-text">Прогресс блока:</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 5%"></div>
+                            </div>
+                            <span class="progress-text">5%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Блок 2: Функциональное тестирование -->
+                <div class="block">
+                    <div class="block-header">
+                        <div class="block-icon">🔍</div>
+                        <div class="block-info">
+                            <h2 class="block-title">БЛОК 2: Функциональное тестирование</h2>
+                            <p class="block-description">Проверка функциональности, управление процессом тестирования</p>
+                        </div>
+                    </div>
+                    <div class="skills-grid">
+                        <!-- Навык 2.1 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">2.1</span>
+                                    <span>Ручное функциональное тестирование</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Что значит "работает"</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Основы тестирования</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Систематический подход</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутые практики</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Архитектура тестирования</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 2.2 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">2.2</span>
+                                    <span>Управление тестированием</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Хаос vs порядок</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Основы планирования</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Управление процессом</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутое управление</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Стратегическое управление</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="block-progress">
+                            <span class="progress-text">Прогресс блока:</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Блок 3: Нефункциональное тестирование -->
+                <div class="block">
+                    <div class="block-header">
+                        <div class="block-icon">⚡</div>
+                        <div class="block-info">
+                            <h2 class="block-title">БЛОК 3: Нефункциональное тестирование</h2>
+                            <p class="block-description">Производительность, безопасность, юзабилити и совместимость</p>
+                        </div>
+                    </div>
+                    <div class="skills-grid">
+                        <!-- Навык 3.1 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">3.1</span>
+                                    <span>Performance Testing</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Скорость имеет значение</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Основы Performance</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Практическое применение</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутые техники</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Экспертиза Performance</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 3.2 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">3.2</span>
+                                    <span>Security Testing</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Безопасность для каждого</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Основы Security</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Практическое тестирование</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутая безопасность</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Security expertise</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 3.3 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">3.3</span>
+                                    <span>Usability & Accessibility Testing</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Удобство = успех</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Основы Usability</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Accessibility testing</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутые практики</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">UX стратегия</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 3.4 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">3.4</span>
+                                    <span>Compatibility & Configuration Testing</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Мир разнообразия</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Базовое compatibility</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Систематический подход</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутые сценарии</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Стратегия compatibility</div>
+                                    <div class="level-lessons">4 урока</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="block-progress">
+                            <span class="progress-text">Прогресс блока:</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Блок 4: Техническое тестирование -->
+                <div class="block">
+                    <div class="block-header">
+                        <div class="block-icon">💻</div>
+                        <div class="block-info">
+                            <h2 class="block-title">БЛОК 4: Техническое тестирование</h2>
+                            <p class="block-description">SQL, API тестирование, работа с документацией</p>
+                        </div>
+                    </div>
+                    <div class="skills-grid">
+                        <!-- Навык 4.1 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">4.1</span>
+                                    <span>SQL для тестировщика</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">БД - сердце приложения</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Чтение и анализ</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Валидация данных</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутая работа</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Архитектура данных</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 4.2 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">4.2</span>
+                                    <span>API Testing & Postman</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">API - скелет приложений</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Основы REST API</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Систематическое API</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутая автоматизация</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">API масштабирование</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 4.3 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">4.3</span>
+                                    <span>API Documentation (Swagger/OpenAPI)</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Документация - контракт</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Работа со Swagger</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Swagger для тест-дизайна</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутая работа</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">API Strategy</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="block-progress">
+                            <span class="progress-text">Прогресс блока:</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Блок 5: Инженерные практики -->
+                <div class="block">
+                    <div class="block-header">
+                        <div class="block-icon">🛠️</div>
+                        <div class="block-info">
+                            <h2 class="block-title">БЛОК 5: Инженерные практики</h2>
+                            <p class="block-description">Git, CI/CD, Docker и современная инфраструктура</p>
+                        </div>
+                    </div>
+                    <div class="skills-grid">
+                        <!-- Навык 5.1 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">5.1</span>
+                                    <span>Git для тестировщика</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Версии без хаоса</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Git как пользователь</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Активная работа</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Git для тестирования</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Git стратегии</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 5.2 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">5.2</span>
+                                    <span>CI/CD для тестировщика</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Конвейер качества</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Понимание CI/CD</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">QA в pipeline</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Построение pipeline</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Advanced CI/CD</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 5.3 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">5.3</span>
+                                    <span>Docker & контейнеризация</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Контейнеры меняют всё</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Docker основы</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Docker для тестирования</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Продвинутые сценарии</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Container экосистема</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="block-progress">
+                            <span class="progress-text">Прогресс блока:</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Блок 6: Управление и процессы -->
+                <div class="block">
+                    <div class="block-header">
+                        <div class="block-icon">📋</div>
+                        <div class="block-info">
+                            <h2 class="block-title">БЛОК 6: Управление и процессы</h2>
+                            <p class="block-description">Agile, управление задачами, коммуникация и soft skills</p>
+                        </div>
+                    </div>
+                    <div class="skills-grid">
+                        <!-- Навык 6.1 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">6.1</span>
+                                    <span>Agile & QA процессы</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">QA в мире изменений</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Scrum для QA</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Agile практики</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Масштабирование Agile</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Agile трансформация</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 6.2 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">6.2</span>
+                                    <span>Jira & управление задачами</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">Порядок в хаосе</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Jira основы</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Эффективная работа</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Jira для test management</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Jira администрирование</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Навык 6.3 -->
+                        <div class="skill">
+                            <div class="skill-header">
+                                <div class="skill-title">
+                                    <span class="skill-number">6.3</span>
+                                    <span>Коммуникация и soft skills</span>
+                                </div>
+                                <svg class="skill-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="levels">
+                                <div class="level coming-soon">
+                                    <div class="level-number">0</div>
+                                    <div class="level-title">QA - мост между мирами</div>
+                                    <div class="level-lessons">3 урока</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">1</div>
+                                    <div class="level-title">Базовая коммуникация</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">2</div>
+                                    <div class="level-title">Продвинутые навыки</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">3</div>
+                                    <div class="level-title">Leadership навыки</div>
+                                    <div class="level-lessons">6 уроков</div>
+                                </div>
+                                <div class="level coming-soon">
+                                    <div class="level-number">4</div>
+                                    <div class="level-title">Strategic thinking</div>
+                                    <div class="level-lessons">5 уроков</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="block-progress">
+                            <span class="progress-text">Прогресс блока:</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
