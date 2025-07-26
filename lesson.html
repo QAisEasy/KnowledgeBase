@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Урок - QA Academy</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Marked.js для парсинга Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js для подсветки кода -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="knowledge-base.html" class="back-link">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M13 10H7m0 0l3-3m-3 3l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>К базе знаний</span>
+                </a>
+                <div class="lesson-nav">
+                    <button id="prevLesson" class="lesson-nav-btn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M13 10H7m0 0l3-3m-3 3l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span>Предыдущий</span>
+                    </button>
+                    <span id="lessonProgress" class="lesson-progress">Урок 1 из 4</span>
+                    <button id="nextLesson" class="lesson-nav-btn">
+                        <span>Следующий</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7 10h6m0 0l-3-3m3 3l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="lesson-container">
+            <div class="lesson-header">
+                <div class="lesson-breadcrumb" id="breadcrumb">
+                    <!-- Хлебные крошки будут загружены динамически -->
+                </div>
+                <h1 id="lessonTitle" class="lesson-title">Загрузка...</h1>
+                <div class="lesson-meta">
+                    <span id="lessonDuration" class="lesson-duration">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="2"/>
+                            <path d="M8 4v4l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span>15 мин</span>
+                    </span>
+                </div>
+            </div>
+
+            <div id="lessonContent" class="lesson-content">
+                <!-- Содержимое урока будет загружено здесь -->
+            </div>
+
+            <div class="lesson-footer">
+                <div id="lessonActions" class="lesson-actions">
+                    <!-- Кнопки действий будут добавлены динамически -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Боковая панель с содержанием урока -->
+        <aside class="lesson-sidebar">
+            <h3 class="sidebar-title">Содержание урока</h3>
+            <div id="tableOfContents" class="table-of-contents">
+                <!-- Оглавление будет сгенерировано автоматически -->
+            </div>
+        </aside>
+    </div>
+
+    <script src="lesson.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-// Простое приложение для тестов с улучшенным UI
+// Управление тестами
 class QuizApp {
     constructor() {
         this.testId = new URLSearchParams(window.location.search).get('id');
@@ -7,6 +7,7 @@ class QuizApp {
         this.correctAnswers = 0;
         this.answers = [];
         this.testData = null;
+        this.courseStructure = null;
         this.selectedAnswer = null;
         this.isAnswered = false;
         this.startTime = Date.now();
@@ -17,14 +18,21 @@ class QuizApp {
 
     async init() {
         try {
-            const response = await fetch(`data/tests/${this.testId}.json`);
-            this.testData = await response.json();
+            // Загружаем структуру курса и данные теста параллельно
+            const [courseResponse, testResponse] = await Promise.all([
+                fetch('data/course-structure.json'),
+                fetch(`data/tests/${this.testId}.json`)
+            ]);
+            
+            this.courseStructure = await courseResponse.json();
+            this.testData = await testResponse.json();
+            
             this.showQuestion();
             this.startTimer();
         } catch (error) {
             console.error('Ошибка загрузки теста:', error);
             alert('Ошибка загрузки теста');
-            window.location.href = 'index.html';
+            window.location.href = 'tests.html';
         }
     }
 
@@ -103,6 +111,14 @@ class QuizApp {
             this.correctAnswers++;
         }
         
+        // Сохраняем ответ
+        this.answers.push({
+            questionId: question.id,
+            selected: this.selectedAnswer,
+            correct: correct,
+            isCorrect: isCorrect
+        });
+        
         // Обновляем счетчик правильных ответов
         document.getElementById('scoreText').textContent = 
             `${this.correctAnswers} правильных`;
@@ -176,6 +192,114 @@ class QuizApp {
         document.getElementById('scoreValue').textContent = this.score;
         document.getElementById('scoreTotal').textContent = `из ${this.testData.questions.length}`;
         document.getElementById('resultMessage').textContent = message;
+        
+        // Генерируем кнопки навигации
+        this.generateResultActions();
+    }
+
+    generateResultActions() {
+        const actions = document.getElementById('resultActions');
+        let actionsHtml = '';
+        
+        // Находим информацию о текущем уровне
+        const levelInfo = this.findLevelInfo();
+        
+        if (levelInfo) {
+            const { level, skill, block, nextLessonId, isLastLevel, isLastLessonInLevel } = levelInfo;
+            
+            if (nextLessonId) {
+                // Есть следующий урок в текущем уровне
+                actionsHtml += `
+                    <a href="lesson.html?id=${nextLessonId}" class="btn btn-primary">
+                        <span>Следующий урок</span>
+                        <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7 10h6m0 0l-3-3m3 3l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </a>
+                `;
+            } else if (isLastLessonInLevel && !isLastLevel) {
+                // Это последний урок в уровне, но есть следующий уровень
+                const nextLevel = this.getNextLevel(skill, level);
+                if (nextLevel && nextLevel.lessons.length > 0 && nextLevel.status === 'active') {
+                    actionsHtml += `
+                        <a href="lesson.html?id=${nextLevel.lessons[0].id}" class="btn btn-primary">
+                            <span>Перейти к следующему уровню</span>
+                            <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7 10h6m0 0l-3-3m3 3l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </a>
+                    `;
+                } else {
+                    actionsHtml += `
+                        <a href="knowledge-base.html" class="btn btn-primary">
+                            <span>К базе знаний</span>
+                        </a>
+                    `;
+                }
+            } else {
+                // Это последний урок в последнем уровне
+                actionsHtml += `
+                    <a href="knowledge-base.html" class="btn btn-primary">
+                        <span>К базе знаний</span>
+                    </a>
+                `;
+            }
+        }
+        
+        // Всегда добавляем кнопки "Пройти заново" и "К списку тестов"
+        actionsHtml += `
+            <button class="btn btn-secondary" onclick="location.reload()">
+                <span>Пройти заново</span>
+            </button>
+            <a href="tests.html" class="btn btn-secondary">
+                <span>К списку тестов</span>
+            </a>
+        `;
+        
+        actions.innerHTML = actionsHtml;
+    }
+
+    findLevelInfo() {
+        for (const block of this.courseStructure.blocks) {
+            for (const skill of block.skills) {
+                for (let levelIndex = 0; levelIndex < skill.levels.length; levelIndex++) {
+                    const level = skill.levels[levelIndex];
+                    // Находим урок с этим тестом
+                    const lessonIndex = level.lessons.findIndex(lesson => lesson.test === this.testId);
+                    if (lessonIndex !== -1) {
+                        const currentLesson = level.lessons[lessonIndex];
+                        let nextLessonId = null;
+                        
+                        // Проверяем, есть ли следующий урок в этом уровне
+                        if (lessonIndex < level.lessons.length - 1) {
+                            nextLessonId = level.lessons[lessonIndex + 1].id;
+                        }
+                        
+                        const isLastLevel = levelIndex === skill.levels.length - 1;
+                        const isLastLessonInLevel = lessonIndex === level.lessons.length - 1;
+                        
+                        return { 
+                            level, 
+                            skill, 
+                            block, 
+                            currentLesson,
+                            nextLessonId, 
+                            isLastLevel,
+                            isLastLessonInLevel 
+                        };
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    getNextLevel(skill, currentLevel) {
+        const currentIndex = skill.levels.findIndex(l => l.id === currentLevel.id);
+        if (currentIndex !== -1 && currentIndex < skill.levels.length - 1) {
+            return skill.levels[currentIndex + 1];
+        }
+        return null;
     }
 }
 

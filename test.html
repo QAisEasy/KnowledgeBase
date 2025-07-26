@@ -9,11 +9,11 @@
 <body>
     <header class="test-header">
         <div class="header-content">
-            <a href="index.html" class="back-link">
+            <a href="tests.html" class="back-link">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M13 10H7m0 0l3-3m-3 3l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                <span>Назад к тестам</span>
+                <span>К списку тестов</span>
             </a>
             <div class="test-timer" id="timer">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -48,15 +48,8 @@
                     <span class="score-total" id="scoreTotal">из 0</span>
                 </div>
                 <div class="result-message" id="resultMessage"></div>
-                <div class="result-actions">
-                    <a href="index.html" class="btn btn-secondary">К списку тестов</a>
-                    <button class="btn btn-primary" onclick="location.reload()">
-                        <span>Пройти заново</span>
-                        <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M4 10a6 6 0 0112 0 6 6 0 01-12 0z" stroke="currentColor" stroke-width="2"/>
-                            <path d="M10 7v3l2 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
+                <div class="result-actions" id="resultActions">
+                    <!-- Кнопки будут добавлены динамически -->
                 </div>
             </div>
         </div>

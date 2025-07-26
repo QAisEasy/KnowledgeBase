@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тесты - QA Academy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="back-link">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M13 10H7m0 0l3-3m-3 3l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>На главную</span>
+                </a>
+                <h1 class="page-title">Тесты для проверки знаний</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tests-header">
+            <p class="tests-subtitle">
+                Проверьте свои знания с помощью интерактивных тестов. 
+                Каждый тест содержит вопросы с подробными объяснениями ответов.
+            </p>
+            <div class="tests-filter">
+                <button class="filter-btn active" data-filter="all">Все тесты</button>
+                <button class="filter-btn" data-filter="active">Доступные</button>
+                <button class="filter-btn" data-filter="coming-soon">Скоро</button>
+            </div>
+        </div>
+
+        <div id="testsGrid" class="tests-grid">
+            <!-- Тесты будут загружены динамически -->
+        </div>
+    </div>
+
+    <script src="tests.js"></script>
+</body>
+</html>

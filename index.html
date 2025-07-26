@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QA Academy - Платформа тестирования</title>
+    <title>QA Academy - Платформа для изучения тестирования</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="hero-section">
         <div class="hero-content">
             <h1 class="hero-title">QA Academy</h1>
-            <p class="hero-subtitle">Интерактивная платформа для изучения тестирования</p>
+            <p class="hero-subtitle">Интерактивная платформа для изучения тестирования ПО</p>
         </div>
         <div class="hero-waves">
             <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -21,74 +21,95 @@
     </div>
 
     <div class="container">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">📚</div>
-                <div class="stat-value">50</div>
-                <div class="stat-label">Тестов</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">❓</div>
-                <div class="stat-value">500+</div>
-                <div class="stat-label">Вопросов</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🎯</div>
-                <div class="stat-value">100%</div>
-                <div class="stat-label">Бесплатно</div>
-            </div>
-        </div>
+        <div class="main-navigation">
+            <a href="knowledge-base.html" class="nav-card">
+                <div class="nav-card-icon">📚</div>
+                <h2 class="nav-card-title">База знаний</h2>
+                <p class="nav-card-description">
+                    Структурированная программа обучения от основ до экспертного уровня
+                </p>
+                <div class="nav-card-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">6</span>
+                        <span class="stat-label">блоков</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">18</span>
+                        <span class="stat-label">навыков</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">90+</span>
+                        <span class="stat-label">уроков</span>
+                    </div>
+                </div>
+                <div class="nav-card-action">
+                    <span>Начать обучение</span>
+                    <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7 10h6m0 0l-3-3m3 3l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </a>
 
-        <div style="text-align: center; margin: 40px 0;">
-            <a href="knowledge-base.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 32px;">
-                <span>📚 База знаний QA Engineer</span>
-                <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M7 10h6m0 0l-3-3m3 3l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+            <a href="tests.html" class="nav-card">
+                <div class="nav-card-icon">📝</div>
+                <h2 class="nav-card-title">Тесты</h2>
+                <p class="nav-card-description">
+                    Проверьте свои знания с помощью интерактивных тестов
+                </p>
+                <div class="nav-card-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">50+</span>
+                        <span class="stat-label">тестов</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">500+</span>
+                        <span class="stat-label">вопросов</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">100%</span>
+                        <span class="stat-label">бесплатно</span>
+                    </div>
+                </div>
+                <div class="nav-card-action">
+                    <span>Пройти тесты</span>
+                    <svg class="arrow-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7 10h6m0 0l-3-3m3 3l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
             </a>
         </div>
 
-
-        <h2 class="section-title">Доступные тесты</h2>
-        <div id="testList" class="test-grid"></div>
+        <div class="features-section">
+            <h2 class="section-title">Почему выбирают QA Academy</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Структурированный подход</h3>
+                    <p class="feature-description">От базовых концепций до экспертного уровня</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3 class="feature-title">Практические знания</h3>
+                    <p class="feature-description">Реальные примеры и кейсы из индустрии</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">Интерактивное обучение</h3>
+                    <p class="feature-description">Тесты и задания для закрепления материала</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h3 class="feature-title">Актуальный контент</h3>
+                    <p class="feature-description">Современные практики и инструменты</p>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <script>
-        // Загружаем список тестов
-        fetch('data/tests.json')
-            .then(r => r.json())
-            .then(data => {
-                const listEl = document.getElementById('testList');
-                data.tests.forEach((test, index) => {
-                    const delay = index * 100;
-                    listEl.innerHTML += `
-                        <div class="test-card" style="animation-delay: ${delay}ms">
-                            <div class="test-card-header">
-                                <div class="test-icon">🎓</div>
-                                <div class="test-badge">Базовый уровень</div>
-                            </div>
-                            <h3 class="test-title">${test.title}</h3>
-                            <p class="test-description">${test.description}</p>
-                            <div class="test-meta">
-                                <div class="meta-item">
-                                    <span class="meta-icon">📝</span>
-                                    <span>${test.questionCount} вопросов</span>
-                                </div>
-                                <div class="meta-item">
-                                    <span class="meta-icon">⏱️</span>
-                                    <span>~15 минут</span>
-                                </div>
-                            </div>
-                            <a href="test.html?id=${test.id}" class="btn btn-primary">
-                                <span>Начать тест</span>
-                                <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path d="M7 10h6m0 0l-3-3m3 3l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                </svg>
-                            </a>
-                        </div>
-                    `;
-                });
-            });
-    </script>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 QA Academy. Создано с ❤️ для будущих QA инженеров</p>
+        </div>
+    </footer>
 </body>
 </html>
