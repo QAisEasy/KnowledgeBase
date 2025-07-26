@@ -48,10 +48,20 @@ class LessonViewer {
         }
     }
 
+    // Получаем путь к файлу урока в новой структуре
+    getLessonPath() {
+        const blockFolder = `block-${this.block.id}`;
+        const skillFolder = `skill-${this.skill.id}`;
+        const levelFolder = `level-${this.currentLevel.id.split('.').pop()}`;
+        
+        return `data/blocks/${blockFolder}/${skillFolder}/${levelFolder}/lessons/${this.lessonId}.md`;
+    }
+
     async loadLesson() {
         try {
-            // Загружаем markdown файл
-            const response = await fetch(`data/lessons/${this.lessonId}.md`);
+            // Загружаем markdown файл из новой структуры
+            const lessonPath = this.getLessonPath();
+            const response = await fetch(lessonPath);
             
             if (!response.ok) {
                 throw new Error('Файл урока не найден');

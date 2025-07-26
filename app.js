@@ -13,27 +13,64 @@ class QuizApp {
         this.startTime = Date.now();
         this.timerInterval = null;
         
+        // Информация о местоположении теста
+        this.block = null;
+        this.skill = null;
+        this.level = null;
+        
         this.init();
     }
 
     async init() {
         try {
-            // Загружаем структуру курса и данные теста параллельно
-            const [courseResponse, testResponse] = await Promise.all([
-                fetch('data/course-structure.json'),
-                fetch(`data/tests/${this.testId}.json`)
-            ]);
-            
+            // Загружаем структуру курса
+            const courseResponse = await fetch('data/course-structure.json');
             this.courseStructure = await courseResponse.json();
-            this.testData = await testResponse.json();
             
-            this.showQuestion();
-            this.startTimer();
+            // Находим информацию о тесте
+            this.findTestInfo();
+            
+            if (this.block && this.skill && this.level) {
+                // Загружаем данные теста из новой структуры
+                const testPath = this.getTestPath();
+                const testResponse = await fetch(testPath);
+                this.testData = await testResponse.json();
+                
+                this.showQuestion();
+                this.startTimer();
+            } else {
+                throw new Error('Тест не найден в структуре курса');
+            }
         } catch (error) {
             console.error('Ошибка загрузки теста:', error);
             alert('Ошибка загрузки теста');
             window.location.href = 'tests.html';
         }
+    }
+
+    findTestInfo() {
+        for (const block of this.courseStructure.blocks) {
+            for (const skill of block.skills) {
+                for (const level of skill.levels) {
+                    for (const lesson of level.lessons) {
+                        if (lesson.test === this.testId) {
+                            this.block = block;
+                            this.skill = skill;
+                            this.level = level;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    getTestPath() {
+        const blockFolder = `block-${this.block.id}`;
+        const skillFolder = `skill-${this.skill.id}`;
+        const levelFolder = `level-${this.level.id.split('.').pop()}`;
+        
+        return `data/blocks/${blockFolder}/${skillFolder}/${levelFolder}/tests/${this.testId}.json`;
     }
 
     startTimer() {
@@ -260,36 +297,35 @@ class QuizApp {
     }
 
     findLevelInfo() {
-        for (const block of this.courseStructure.blocks) {
-            for (const skill of block.skills) {
-                for (let levelIndex = 0; levelIndex < skill.levels.length; levelIndex++) {
-                    const level = skill.levels[levelIndex];
-                    // Находим урок с этим тестом
-                    const lessonIndex = level.lessons.findIndex(lesson => lesson.test === this.testId);
-                    if (lessonIndex !== -1) {
-                        const currentLesson = level.lessons[lessonIndex];
-                        let nextLessonId = null;
-                        
-                        // Проверяем, есть ли следующий урок в этом уровне
-                        if (lessonIndex < level.lessons.length - 1) {
-                            nextLessonId = level.lessons[lessonIndex + 1].id;
-                        }
-                        
-                        const isLastLevel = levelIndex === skill.levels.length - 1;
-                        const isLastLessonInLevel = lessonIndex === level.lessons.length - 1;
-                        
-                        return { 
-                            level, 
-                            skill, 
-                            block, 
-                            currentLesson,
-                            nextLessonId, 
-                            isLastLevel,
-                            isLastLessonInLevel 
-                        };
-                    }
-                }
+        // Используем уже найденную информацию
+        const level = this.level;
+        const skill = this.skill;
+        const block = this.block;
+        
+        // Находим урок с этим тестом
+        const lessonIndex = level.lessons.findIndex(lesson => lesson.test === this.testId);
+        if (lessonIndex !== -1) {
+            const currentLesson = level.lessons[lessonIndex];
+            let nextLessonId = null;
+            
+            // Проверяем, есть ли следующий урок в этом уровне
+            if (lessonIndex < level.lessons.length - 1) {
+                nextLessonId = level.lessons[lessonIndex + 1].id;
             }
+            
+            const levelIndex = skill.levels.findIndex(l => l.id === level.id);
+            const isLastLevel = levelIndex === skill.levels.length - 1;
+            const isLastLessonInLevel = lessonIndex === level.lessons.length - 1;
+            
+            return { 
+                level, 
+                skill, 
+                block, 
+                currentLesson,
+                nextLessonId, 
+                isLastLevel,
+                isLastLessonInLevel 
+            };
         }
         return null;
     }
